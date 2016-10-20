@@ -2,13 +2,14 @@ import restify from 'restify'
 import mongoose from 'mongoose'
 
 import { getEvents, createEvent, updateEvent, deleteEvent } from './handlers/Event'
-import { getGuests, postGuest } from './handlers/Guest'
+import { getGuests, postGuest, updateGuest, deleteGuest } from './handlers/Guest'
 
 var server = restify.createServer({
   name: 'hospital',
   version: '1.0.0'
 })
 
+server.use(restify.fullResponse())
 server.use(restify.acceptParser(server.acceptable))
 server.use(restify.queryParser())
 server.use(restify.bodyParser())
@@ -26,5 +27,6 @@ server.del('/events/:id', deleteEvent)
 
 server.get('/guests', getGuests)
 server.post('/guests', postGuest)
+server.del('/guests/:id', deleteGuest)
 
 server.listen(8080, () => console.log('%s listening at %s', server.name, server.url))

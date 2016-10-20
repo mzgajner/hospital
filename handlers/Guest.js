@@ -19,6 +19,15 @@ export function getGuests (req, res, next) {
     })
 }
 
+export function updateGuest () {}
+
+export async function deleteGuest (req, res, next) {
+  await Guest.findByIdAndRemove(req.params.id)
+
+  res.send(204)
+  next()
+}
+
 export function postGuest (req, res, next) {
   var guest = new Guest()
 
