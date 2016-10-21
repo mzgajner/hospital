@@ -27,6 +27,7 @@ server.del('/events/:id', deleteEvent)
 
 server.get('/guests', getGuests)
 server.post('/guests', postGuest)
+server.put('/guests/:id', updateGuest)
 server.del('/guests/:id', deleteGuest)
 
 server.listen(8080, () => console.log('%s listening at %s', server.name, server.url))

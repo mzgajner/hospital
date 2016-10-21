@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import _ from 'lodash'
 
 var Guest = mongoose.model('Guest', new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -19,7 +20,12 @@ export function getGuests (req, res, next) {
     })
 }
 
-export function updateGuest () {}
+export async function updateGuest (req, res, next) {
+  var guest = await Guest.findByIdAndUpdate(req.params.id, { $set: _.omit(req.params, 'id') }, { new: true })
+
+  res.send(guest)
+  next()
+}
 
 export async function deleteGuest (req, res, next) {
   await Guest.findByIdAndRemove(req.params.id)
