@@ -3,10 +3,13 @@ import _ from 'lodash'
 export default function (Model) {
   return {
     create: (req, res, next) => {
-      var guest = new Model(req.params)
+      _.forEach(req.params, (value, key) => {
+        if (value === '') req.params[key] = null
+      })
 
-      guest.save(function () {
-        res.send(guest)
+      Model.create(req.params, function (error, entity) {
+        if (error) return console.log(error)
+        res.send(entity)
         next()
       })
     },
@@ -14,9 +17,9 @@ export default function (Model) {
     read: async (req, res, next) => {
       var result
       var populateFields = _.values(Model.schema.paths)
-      .filter((object) => object.path !== '_id' && object.instance === 'ObjectID' || object.instance === 'Array' && object.caster.instance === 'ObjectID')
-      .map((object) => object.path)
-      .join(' ')
+        .filter((object) => object.path !== '_id' && object.instance === 'ObjectID' || object.instance === 'Array' && object.caster.instance === 'ObjectID')
+        .map((object) => object.path)
+        .join(' ')
 
       if (req.params.id) {
         result = await Model.findById(req.params.id).populate(populateFields) || ''
@@ -29,9 +32,13 @@ export default function (Model) {
     },
 
     update: async (req, res, next) => {
-      var guest = await Model.findByIdAndUpdate(req.params.id, { $set: _.omit(req.params, 'id') }, { new: true })
+      _.forEach(req.params, (value, key) => {
+        if (value === '') req.params[key] = null
+      })
 
-      res.send(guest)
+      var entity = await Model.findByIdAndUpdate(req.params.id, { $set: _.omit(req.params, 'id') }, { new: true })
+
+      res.send(entity)
       next()
     },
 
