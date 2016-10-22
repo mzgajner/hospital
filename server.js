@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 
 import { getEvents, createEvent, updateEvent, deleteEvent } from './handlers/Event'
 import { getGuests, postGuest, updateGuest, deleteGuest } from './handlers/Guest'
+import { getPayers, postPayer, updatePayer, deletePayer } from './handlers/Payer'
 
 var server = restify.createServer({
   name: 'hospital',
@@ -26,8 +27,15 @@ server.put('/events/:id', updateEvent)
 server.del('/events/:id', deleteEvent)
 
 server.get('/guests', getGuests)
+server.get('/guests/:id', getGuests)
 server.post('/guests', postGuest)
 server.put('/guests/:id', updateGuest)
 server.del('/guests/:id', deleteGuest)
+
+server.get('/payers', getPayers)
+server.get('/payers/:id', getPayers)
+server.post('/payers', postPayer)
+server.put('/payers/:id', updatePayer)
+server.del('/payers/:id', deletePayer)
 
 server.listen(8080, () => console.log('%s listening at %s', server.name, server.url))

@@ -1,22 +1,12 @@
-import mongoose from 'mongoose'
 import _ from 'lodash'
-
-var Event = mongoose.model('Event', new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  location: String,
-  date: Date,
-  participants: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Guest'
-  }]
-}))
+import { Event, Guest } from '../models'
 
 function modifyEventReferencesOnGuests (addOrRemove, guestIds, eventIds) {
   var method = addOrRemove === 'add' ? 'push' : 'pull'
   var updateConfig = eventIds.length > 1 ? { [`$${method}All`]: { events: eventIds } } : { [`$${method}`]: { events: eventIds[0] } }
 
   return Promise.all(guestIds.map((id) =>
-    mongoose.model('Guest').update({ _id: id }, updateConfig).exec()
+    Guest.update({ _id: id }, updateConfig).exec()
   ))
 }
 
@@ -34,12 +24,7 @@ export async function getEvents (req, res, next) {
 }
 
 export async function createEvent (req, res, next) {
-  var event = new Event()
-
-  event._id = mongoose.Types.ObjectId()
-  event.location = req.params.location
-  event.date = req.params.date
-  event.participants = req.params.participants
+  var event = new Event(req.params)
 
   await event.save()
   await modifyEventReferencesOnGuests('add', event.participants, event._id)
