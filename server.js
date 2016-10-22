@@ -1,9 +1,9 @@
 import restify from 'restify'
 import mongoose from 'mongoose'
+import _ from 'lodash'
 
-import { getEvents, createEvent, updateEvent, deleteEvent } from './handlers/Event'
-import { getGuests, postGuest, updateGuest, deleteGuest } from './handlers/Guest'
-import { getPayers, postPayer, updatePayer, deletePayer } from './handlers/Payer'
+import Handlers from './handlers'
+import { Payer, RoomType, Event, Transport, Room, Guest } from './models.js'
 
 var server = restify.createServer({
   name: 'hospital',
@@ -19,23 +19,22 @@ server.use(restify.bodyParser())
 mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost/hospital')
 
-// Set up our routes and start the server
-server.get('/events', getEvents)
-server.get('/events/:id', getEvents)
-server.post('/events', createEvent)
-server.put('/events/:id', updateEvent)
-server.del('/events/:id', deleteEvent)
+var entities = {
+  payers: Payer,
+  roomTypes: RoomType,
+  events: Event,
+  transports: Transport,
+  rooms: Room,
+  guests: Guest
+}
 
-server.get('/guests', getGuests)
-server.get('/guests/:id', getGuests)
-server.post('/guests', postGuest)
-server.put('/guests/:id', updateGuest)
-server.del('/guests/:id', deleteGuest)
-
-server.get('/payers', getPayers)
-server.get('/payers/:id', getPayers)
-server.post('/payers', postPayer)
-server.put('/payers/:id', updatePayer)
-server.del('/payers/:id', deletePayer)
+_.each(entities, (model, url) => {
+  var handlers = Handlers(model)
+  server.get(`/${url}`, handlers.read)
+  server.get(`/${url}/:id`, handlers.read)
+  server.post(`/${url}`, handlers.create)
+  server.put(`/${url}/:id`, handlers.update)
+  server.del(`/${url}/:id`, handlers.del)
+})
 
 server.listen(8080, () => console.log('%s listening at %s', server.name, server.url))

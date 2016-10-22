@@ -48,7 +48,7 @@ export const Guest = mongoose.model('Guest', new mongoose.Schema({
   country: String,
   organisation: String,
   arrival: {
-    reference: {
+    transport: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Transport'
     },
@@ -58,7 +58,7 @@ export const Guest = mongoose.model('Guest', new mongoose.Schema({
     }
   },
   departure: {
-    reference: {
+    transport: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Transport'
     },
@@ -68,7 +68,7 @@ export const Guest = mongoose.model('Guest', new mongoose.Schema({
     }
   },
   accommodation: {
-    reference: {
+    room: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Room'
     },
