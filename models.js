@@ -48,34 +48,28 @@ export const Guest = mongoose.model('Guest', new mongoose.Schema({
   country: String,
   organisation: String,
   arrival: {
-    transport: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Transport'
-    },
-    payer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Payer'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transport'
+  },
+  arrivalPayer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payer'
   },
   departure: {
-    transport: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Transport'
-    },
-    payer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Payer'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transport'
+  },
+  departurePayer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payer'
   },
   accommodation: {
-    room: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Room'
-    },
-    payer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Payer'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Room'
+  },
+  accomodationPayer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payer'
   },
   events: [{
     type: mongoose.Schema.Types.ObjectId,
