@@ -8,23 +8,25 @@ export default function (Model) {
       })
 
       Model.create(req.params, function (error, entity) {
-        if (error) return console.log(error)
-        res.send(entity)
+        if (error) {
+          res.send(400, {
+            message: error.message,
+            errors: error.errors
+          })
+        } else {
+          res.send(200, entity)
+        }
         next()
       })
     },
 
     read: async (req, res, next) => {
       var result
-      var populateFields = _.values(Model.schema.paths)
-        .filter((object) => object.path !== '_id' && object.instance === 'ObjectID' || object.instance === 'Array' && object.caster.instance === 'ObjectID')
-        .map((object) => object.path)
-        .join(' ')
 
       if (req.params.id) {
-        result = await Model.findById(req.params.id).populate(populateFields) || ''
+        result = await Model.findById(req.params.id) || ''
       } else {
-        result = await Model.find().populate(populateFields)
+        result = await Model.find()
       }
 
       res.send(result)

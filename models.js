@@ -34,7 +34,7 @@ export const Transport = mongoose.model('Transport', new mongoose.Schema({
 }))
 
 export const Room = mongoose.model('Room', new mongoose.Schema({
-  Name: String,
+  name: String,
   type: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RoomType'
