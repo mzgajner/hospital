@@ -37,4 +37,4 @@ _.each(entities, (model, url) => {
   server.del(`/${url}/:id`, handlers.del)
 })
 
-server.listen(8080, () => console.log('%s listening at %s', server.name, server.url))
+server.listen(process.env.PORT || 8080, () => console.log('%s listening at %s', server.name, server.url))
