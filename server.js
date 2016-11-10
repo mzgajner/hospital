@@ -17,7 +17,7 @@ server.use(restify.bodyParser())
 
 // var config = require('./config')
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost/hospital')
+mongoose.connect(process.env.MONGODB_URI)
 
 var entities = {
   payers: Payer,
