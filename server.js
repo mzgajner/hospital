@@ -17,7 +17,7 @@ server.use(restify.bodyParser())
 
 // var config = require('./config')
 mongoose.Promise = global.Promise
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/hospital')
 
 var entities = {
   payers: Payer,
@@ -30,11 +30,23 @@ var entities = {
 
 _.each(entities, (model, url) => {
   var handlers = Handlers(model)
-  server.get(`/${url}`, handlers.read)
-  server.get(`/${url}/:id`, handlers.read)
-  server.post(`/${url}`, handlers.create)
-  server.put(`/${url}/:id`, handlers.update)
-  server.del(`/${url}/:id`, handlers.del)
+  server.get(`/api/${url}`, handlers.read)
+  server.get(`/api/${url}/:id`, handlers.read)
+  server.post(`/api/${url}`, handlers.create)
+  server.put(`/api/${url}/:id`, handlers.update)
+  server.del(`/api/${url}/:id`, handlers.del)
 })
+
+server.get(/\/guests/, restify.serveStatic({ directory: './client', file: 'index.html' }))
+server.get(/\/events/, restify.serveStatic({ directory: './client', file: 'index.html' }))
+server.get(/\/transports/, restify.serveStatic({ directory: './client', file: 'index.html' }))
+server.get(/\/payers/, restify.serveStatic({ directory: './client', file: 'index.html' }))
+server.get(/\/rooms/, restify.serveStatic({ directory: './client', file: 'index.html' }))
+server.get(/\/roomTypes/, restify.serveStatic({ directory: './client', file: 'index.html' }))
+
+server.get(/.*/, restify.serveStatic({
+  directory: './client',
+  default: 'index.html'
+}))
 
 server.listen(process.env.PORT || 8080, () => console.log('%s listening at %s', server.name, server.url))
